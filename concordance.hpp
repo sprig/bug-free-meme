@@ -20,28 +20,16 @@
 
 #include<stdexcept>
 #include<string>
-#include<map>
+#include<vector>
+#include<utility>
+
 
 namespace kk {
 #ifndef KK_CONCORDANCE
 #define KK_CONCORDANCE
   namespace concordance {
-    class Concordance {
-    protected:
-      std::string separators;
-      // codepoint needs up to 4 chars + null terminator (not necessary, just for convenience).
-      char encoded_codepoint[5];
-      int current_byte;
-      int codepoint_bytes;
-      unsigned long long total_bytes;
-      std::string current_word;
-      std::map<std::string,unsigned long> words;
-    public:
-      Concordance(std::string separators = u8" \t\n\r,.:|!?'-[](){}`;\U0000FEFF");
-      void next_byte(char ch);
-      void read_line(std::string line);
-      inline std::map<std::string,unsigned long> counts() {return this->words;};
-    };
+
+    typedef std::pair<std::string, unsigned long> VP;
 
     class malformed_input : std::runtime_error {
     protected:
@@ -49,8 +37,33 @@ namespace kk {
     public:
       malformed_input(unsigned long long byte);
       virtual std::string what();
-      unsigned long long get_where() {return this->where;};
+      unsigned long long get_where();
     };
+
+    class _cImpl;
+
+    class Concordance {
+    private:
+      _cImpl* impl;
+    public:
+      Concordance(std::string separators = u8" \t\n\r,.:|!?-––<>[](){}`;*&^%$#@~1234567890=/\U0000FEFF",
+                  bool sort_by_frequency = false);
+      ~Concordance();
+      void sort_by_frequency(bool by_frequency);
+
+      void next_byte(unsigned char ch);
+      void process_string(std::string line);
+      void add_word(std::string word);
+
+      void commit_current_word();
+      bool complete_codepoint_p();
+
+      typedef std::vector<VP>::iterator iterator;
+      iterator begin(bool by_frequency);
+      iterator begin();
+      iterator end();
+    };
+
   }
 #endif // KK_CONCORDANCE
 }
