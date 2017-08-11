@@ -1,9 +1,9 @@
-CXX=g++-7
-CPPFLAGS ?= $(INC_FLAGS) -Wall -Wextra -pedantic -std=c++17 -MMD -MP
+CXX=g++
+CPPFLAGS ?= $(INC_FLAGS) -Wall -Wextra -pedantic -std=c++11 -MMD -MP
 LDFLAGS=-lm
 
 TARGET ?= conc
-SRC_DIRS ?= .
+SRC_DIRS ?= src
 
 SRCS := $(shell find $(SRC_DIRS) -name '*.cpp' -or -name '*.c' -or -name '*.s')
 OBJS := $(addsuffix .o,$(basename $(SRCS)))

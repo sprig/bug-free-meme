@@ -22,7 +22,7 @@
 #include<string>
 #include<vector>
 #include<utility>
-
+#include<sstream>
 
 namespace kk {
 #ifndef KK_CONCORDANCE
@@ -32,15 +32,18 @@ namespace kk {
     typedef std::pair<std::string, unsigned long> VP;
 
     class malformed_input : std::runtime_error {
+    private:
+      std::stringstream ss;
     protected:
       unsigned long long where;
+      std::string error;
     public:
       malformed_input(unsigned long long byte);
-      virtual std::string what();
+      virtual const char* what() const _NOEXCEPT;
       unsigned long long get_where();
     };
 
-    class _cImpl;
+    struct _cImpl;
 
     class Concordance {
     private:

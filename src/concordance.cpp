@@ -43,15 +43,19 @@ namespace kk {
 
     // Constructor for the exception that is thrown when the UTF-8 is invalid.
     // byte is the location in the stream where the error occured.
-    malformed_input::malformed_input(unsigned long long byte) : runtime_error(""), where(byte) {}
-
+    malformed_input::malformed_input(unsigned long long byte) : runtime_error(""), where(byte), ss() {
+      try {
+	this->ss <<  "Invalid UTF-8 string! Error encountered at byte "<<this->where<<std::endl;
+	this->error = ss.str();
+      } catch ( std::stringstream::failure* e ) {
+	delete e;
+	this->error = "Invalid UTF-8 string! Could not print affected byte :-(";
+      }
+    }
 
     // Output an error string.
-    std::string malformed_input::what()
-    {
-      std::stringstream ss;
-      ss <<  "Invalid UTF-8 string! Error encountered at byte "<<this->where<<std::endl;
-      return ss.str();
+    const char* malformed_input::what() const _NOEXCEPT {
+      return this->error.data();
     }
 
     // Getter for `where` which contains the erroneous byte.
