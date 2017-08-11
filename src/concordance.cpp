@@ -53,7 +53,7 @@ namespace kk {
     }
 
     // Output an error string.
-    const char* malformed_input::what() const _NOEXCEPT {
+    const char* malformed_input::what() const noexcept {
       return this->error.data();
     }
 
