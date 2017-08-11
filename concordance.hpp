@@ -23,6 +23,8 @@
 #include<map>
 
 namespace kk {
+#ifndef KK_CONCORDANCE
+#define KK_CONCORDANCE
   namespace concordance {
     class Concordance {
     protected:
@@ -50,4 +52,5 @@ namespace kk {
       unsigned long long get_where() {return this->where;};
     };
   }
+#endif // KK_CONCORDANCE
 }
