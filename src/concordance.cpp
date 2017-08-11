@@ -47,8 +47,7 @@ namespace kk {
       try {
 	this->ss <<  "Invalid UTF-8 string! Error encountered at byte "<<this->where<<std::endl;
 	this->error = ss.str();
-      } catch ( std::stringstream::failure* e ) {
-	delete e;
+      } catch ( const std::stringstream::failure& e ) {
 	this->error = "Invalid UTF-8 string! Could not print affected byte :-(";
       }
     }
